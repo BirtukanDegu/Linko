@@ -26,7 +26,7 @@ const Header = () => {
               className="bg-inherit outline-none border-none placeholder:text-light-text text-brand-dark-purple"
             />
           </div>
-          <div className="flex items-center bg-[#1877f2] text-white px-[12px] py-[12px] rounded-[10px] gap-[10px] cursor-pointer">
+          <div className="flex items-center bg-brand-purple text-white px-[12px] py-[12px] rounded-[10px] gap-[10px] cursor-pointer">
             <Add />
             <span>Create</span>
           </div>

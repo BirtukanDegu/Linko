@@ -19,7 +19,7 @@ const Sidebar = () => {
             className="rounded-2xl w-[50px] h-[50px]"
           />
           <div>
-            <h4 className="text-brand-dark-purple">Lana Del Ray</h4>
+            <h4 className="text-brand-dark-purple">Lana Del Rey</h4>
             <span className="text-[#72849b]">@lana</span>
           </div>
         </div>

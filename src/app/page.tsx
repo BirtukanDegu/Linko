@@ -28,7 +28,7 @@ const Home: React.FC = () => {
                   alt="avatar"
                 />
                 <div>
-                  <h4 className="text-[#1d3a5f]">Lana Del Ray</h4>
+                  <h4 className="text-[#1d3a5f]">Lana Del Rey</h4>
                   <span className="text-xs font-normal text-light-text">
                     12 hours ago
                   </span>
