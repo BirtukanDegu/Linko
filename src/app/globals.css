@@ -8,12 +8,16 @@
 @theme {
   --color-brand-purple: #6200FF;
   --color-brand-light-purple: #efe6ff;
+  --color-brand-dark-purple: #130f3a;
   --color-brand-blue: #314b98;
   --color-brand-orange: #ff6a00;
   --color-brand-red: #c7361c;
   --color-brand-pink: #f9cee1;
   --color-brand-yellow: #ffd64d;
   --color-brand-cream: #fef8dd;
+  --color-brand-green: #4caf50;
+  --color-background: #f9f5ff;
+  --color-light-text: #91a4bf;
 
   --breakpoint-*: initial; 
   --breakpoint-xs: 480px; 
@@ -32,7 +36,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #f9f5ff;
+    --background: #ffffff;
     --foreground: #fbf4eb;
   }
 }
