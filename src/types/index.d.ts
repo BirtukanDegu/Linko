@@ -1,7 +1,17 @@
-declare interface BookType {
-  title: string;
-  id: string;
-  column: ColumnType;
-};
+export interface UserDataType {
+  id: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  createdAt: string,
+  username: string
+}
 
-declare type ColumnType = "wishlist" | "que" | "doing" | "done";
+export interface AuthDataType {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirmation?: string;
+}

@@ -8,24 +8,32 @@ import LoginRegisterForm from '@/components/LoginRegisterForm';
 import { useAppDispatch } from '@/hooks/redux-hooks';
 import { setAuthUser } from '@/redux/authUser/slice';
 import { auth, db } from '@/app/firebase';
+import { AuthDataType } from '@/types';
 
 const content = {
   type: 'register',
   formHeading: 'Welcome!',
-  formHint: 'Register to access to all features of Socialsquare.',
+  formHint: 'Register to access to all features of Linko.',
   btnText: 'Sign Up',
 };
 
-const SignIn: React.FC = () => {
+const SignIn = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  function handleRegister(username: string | null, email: string, password: string) {
-    createUserWithEmailAndPassword(auth, email, password).then(async ({ user }) => {
+  function handleRegister(data: AuthDataType) {
+    createUserWithEmailAndPassword(auth, data.email, data.password).then(async ({ user }) => {
       const ref = doc(db, 'users', user.uid);
-      await setDoc(ref, { createdAt: Date.now().toString(), username, email });
+      await setDoc(ref, { 
+        id: user.uid,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        createdAt: Date.now().toString(),
+        username: data.username,
+        email: data.email,
+      });
       if (auth.currentUser) {
-        await updateProfile(auth.currentUser, { displayName: username });
+        await updateProfile(auth.currentUser, { displayName: data.username });
       }
       dispatch(
         setAuthUser({
@@ -39,7 +47,7 @@ const SignIn: React.FC = () => {
     });
   }
   return (
-    <div className='flex items-center justify-center h-screen w-full  bg-gray-50'>
+    <div className='flex items-center justify-center h-screen w-full bg-gray-50'>
       <LoginRegisterForm content={content} submitHandler={handleRegister} />
     </div>
   );

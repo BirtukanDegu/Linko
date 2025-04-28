@@ -7,6 +7,7 @@ import LoginRegisterForm from '@/components/LoginRegisterForm';
 import { useAppDispatch } from '@/hooks/redux-hooks';
 import { setAuthUser } from '@/redux/authUser/slice';
 import { auth } from '@/app/firebase';
+import { AuthDataType } from '@/types';
 
 const content = {
   type: 'login',
@@ -15,12 +16,12 @@ const content = {
   btnText: 'Sign In',
 };
 
-const SignIn: React.FC = () => {
+const SignIn = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  function handleLogin(username: string | null, email: string, password: string) {
-    signInWithEmailAndPassword(auth, email, password).then(({ user }) => {
+  function handleLogin(data: AuthDataType) {
+    signInWithEmailAndPassword(auth, data.email, data.password).then(({ user }) => {
       dispatch(
         setAuthUser({
           username: user.displayName,
@@ -29,12 +30,12 @@ const SignIn: React.FC = () => {
           token: user.refreshToken,
         }),
       );
-      router.push('/');
+      router.push('/profile');
     });
   }
 
   return (
-    <div className='flex items-center justify-center h-screen w-full  bg-gray-50'>
+    <div className='flex items-center justify-center h-screen w-full bg-gray-50'>
       <LoginRegisterForm content={content} submitHandler={handleLogin} />
     </div>
   );

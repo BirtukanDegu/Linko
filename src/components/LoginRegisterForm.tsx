@@ -1,16 +1,10 @@
 import { atma } from '@/fonts/font';
+import { AuthDataType } from '@/types';
 import { Lock, User } from 'iconsax-reactjs';
 import { Mail } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-
-interface AuthDataType {
-  username: string;
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-}
 
 interface LoginRegisterFormProps {
   content: {
@@ -19,11 +13,13 @@ interface LoginRegisterFormProps {
     formHint: string;
     btnText: string;
   };
-  submitHandler: (username: string | null, email: string, password: string) => void;
+  submitHandler: (arg: AuthDataType) => void;
 }
 
 const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ content, submitHandler }) => {
   const [authData, setAuthData] = React.useState<AuthDataType>({
+    firstName: '',
+    lastName: '',
     username: '',
     email: '',
     password: '',
@@ -55,9 +51,9 @@ const LoginRegisterForm: React.FC<LoginRegisterFormProps> = ({ content, submitHa
           onSubmit={(e) => {
             e.preventDefault();
             if (content.type === 'login') {
-              submitHandler(null, authData.email, authData.password);
+              submitHandler(authData);
             } else {
-              submitHandler(authData.username, authData.email, authData.password);
+              submitHandler(authData);
             }
           }}
           className="space-y-4 w-full"
