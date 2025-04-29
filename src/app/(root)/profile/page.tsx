@@ -2,15 +2,18 @@
 
 import { auth } from '@/app/firebase';
 import PostList from '@/components/PostList';
+import UploadAvatarModal from '@/components/UploadAvatarModal';
 import { useUserData } from '@/hooks/use-users';
 import { Camera } from 'iconsax-reactjs';
-import React from 'react';
+import React, { useState } from 'react';
 
 const Profile = () => {
   const userData = useUserData(auth.currentUser?.uid);
+  const [avatarUploadMode, setAvatarUploadMode] = useState(false);
 
   return (
     <div className="w-1/2 h-full">
+      {avatarUploadMode && <UploadAvatarModal />}
       <div className="flex flex-col h-full gap-[50px]">
         <div className="relative w-full h-full">
           {/* Banner */}
@@ -31,7 +34,10 @@ const Profile = () => {
                 alt="avatar"
                 className="w-full h-full rounded-full object-cover"
               />
-              <div className="absolute left-[80px] bottom-[-20px] bg-white rounded-full p-[10px] border border-gray-300 cursor-pointer hover:text-[#5e97e1] transition">
+              <div 
+                onClick={() => setAvatarUploadMode(true)}
+                className="absolute left-[80px] bottom-[-20px] bg-white rounded-full p-[10px] border border-gray-300 cursor-pointer hover:text-[#5e97e1] transition"
+              >
                 <Camera className="text-[#1877f2] text-[20px]" />
               </div>
             </div>
