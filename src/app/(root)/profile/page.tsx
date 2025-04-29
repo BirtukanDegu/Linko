@@ -3,17 +3,34 @@
 import { auth } from '@/app/firebase';
 import PostList from '@/components/PostList';
 import UploadAvatarModal from '@/components/UploadAvatarModal';
-import { useUserData } from '@/hooks/use-users';
+import { useGetUserAvatar, useUserAvatarUpload, useUserData } from '@/hooks/use-users';
 import { Camera } from 'iconsax-reactjs';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Profile = () => {
   const userData = useUserData(auth.currentUser?.uid);
   const [avatarUploadMode, setAvatarUploadMode] = useState(false);
+  const { avatar, getAvatar } = useGetUserAvatar(auth.currentUser?.uid);
+  const [avatarImage, setAvatarImage] = useState<string | null>(null);
+  const uploadAvatar = useUserAvatarUpload(avatarImage!);
+
+  async function onAvatarUpload() {
+    setAvatarUploadMode(false);
+    await uploadAvatar();
+    await getAvatar();
+  }
+
+  useEffect(() => {
+    (async () => {
+      await getAvatar();
+    })();
+  }, [avatarUploadMode]);
 
   return (
     <div className="w-1/2 h-full">
-      {avatarUploadMode && <UploadAvatarModal />}
+      {avatarUploadMode && (
+        <UploadAvatarModal setAvatar={setAvatarImage} onSubmit={onAvatarUpload} />
+      )}
       <div className="flex flex-col h-full gap-[50px]">
         <div className="relative w-full h-full">
           {/* Banner */}
@@ -29,11 +46,20 @@ const Profile = () => {
           <div>
             {/* Avatar */}
             <div className="absolute left-[30px] bottom-[50px] w-[140px] h-[140px]">
-              <img
-                src="/images/sample/1.jpeg"
-                alt="avatar"
-                className="w-full h-full rounded-full object-cover"
-              />
+              {avatar ? (
+                <img
+                  src={avatar}
+                  alt="avatar"
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <img
+                  src="/images/sample/1.jpeg"
+                  alt="avatar"
+                  className="w-full h-full rounded-full object-cover"
+                />
+              )
+              }
               <div 
                 onClick={() => setAvatarUploadMode(true)}
                 className="absolute left-[80px] bottom-[-20px] bg-white rounded-full p-[10px] border border-gray-300 cursor-pointer hover:text-[#5e97e1] transition"
@@ -45,8 +71,8 @@ const Profile = () => {
             {/* Details */}
             <div className="flex bg-white w-full h-[100px] border border-gray-200 pl-[180px] pt-[20px]">
               <div className="flex flex-col">
-                <h2 className="text-[#1d3a5f]">{userData?.userData?.firstName + ' ' + userData?.userData?.lastName}</h2>
-                <span className="text-gray-400">{'@' + userData?.userData?.username}</span>
+                <h2 className="text-[#1d3a5f]">{userData?.firstName + ' ' + userData?.lastName}</h2>
+                <span className="text-gray-400">{'@' + userData?.username}</span>
               </div>
             </div>
           </div>
@@ -55,7 +81,7 @@ const Profile = () => {
         {/* Posts */}
         <div className="p-[20px] rounded-[15px]">
           <h2 className="ml-[20px] mb-[20px] text-[#1d3a5f]">
-            {userData?.userData?.firstName}'s posts
+            {userData?.firstName}'s posts
           </h2>
           <PostList />
         </div>

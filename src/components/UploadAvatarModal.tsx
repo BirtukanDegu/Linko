@@ -3,7 +3,12 @@ import dynamic from 'next/dynamic';
 
 const Avatar = dynamic(() => import('react-avatar-edit'), { ssr: false });
 
-function UploadAvatarModal() {
+interface UploadAvatarModalType {
+  setAvatar: (arg: string | null) => void;
+  onSubmit: () => void;
+}
+
+function UploadAvatarModal({ setAvatar, onSubmit }: UploadAvatarModalType) {
   const [preview, setPreview] = React.useState<string | null>(null);
 
   function onClose() {
@@ -40,10 +45,10 @@ function UploadAvatarModal() {
         {preview && <img src={preview} alt="Preview" className="w-[200px]" />}
 
         <div className="flex w-full gap-5">
-          <button className="flex-1 flex justify-center items-center rounded-[10px] p-3 bg-[#1877f2] text-white cursor-pointer">
+          <button onClick={onClose} className="flex-1 flex justify-center items-center rounded-[10px] p-3 bg-[#1877f2] text-white cursor-pointer">
             Close
           </button>
-          <button className="flex-1 flex justify-center items-center rounded-[10px] p-3 bg-[#1877f2] text-white cursor-pointer">
+          <button onClick={onSubmit} className="flex-1 flex justify-center items-center rounded-[10px] p-3 bg-[#1877f2] text-white cursor-pointer">
             Save
           </button>
         </div>
