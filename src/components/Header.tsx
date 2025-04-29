@@ -1,13 +1,27 @@
+'use client';
+
+import { auth } from '@/app/firebase';
 import { atma } from '@/fonts/font';
+import { useGetUserAvatar } from '@/hooks/use-users';
 import { Add, SearchNormal } from 'iconsax-reactjs';
 import Image from 'next/image';
-import React from 'react';
+import Link from 'next/link';
+import React, { useEffect } from 'react';
+import Avatar from './Avatar';
 
 const Header = () => {
+  const { getAvatar } = useGetUserAvatar(auth.currentUser?.uid);
+
+  useEffect(() => {
+    (async () => {
+      await getAvatar();
+    })();
+  }, []);
+
   return (
     <div className="flex h-[100px] border-b border-gray-300/15">
       <div className="flex justify-between w-full px-[30px] py-[30px]">
-        <div className="flex items-center gap-4">
+        <Link href='/' className="flex items-center gap-4">
           <Image
             src="/images/Linko.svg"
             alt="logo"
@@ -16,7 +30,7 @@ const Header = () => {
             className="w-[40px] h-[40px]"
           />
           <span className={`${atma.className} text-3xl font-extrabold text-[#23446e]`}>Linko</span>
-        </div>
+        </Link>
         <div className="flex items-center gap-[30px]">
           <div className="flex items-center bg-brand-pink/10 border border-brand-light-purple px-4 py-[15px] pr-[60px] rounded-[10px] gap-[10px]">
             <SearchNormal className="text-brand-dark-purple w-[15px] h-[15px]" />
@@ -30,12 +44,8 @@ const Header = () => {
             <Add />
             <span>Create</span>
           </div>
-          <div>
-            <img
-              src="/images/sample/3.jpeg"
-              alt="avatar"
-              className="rounded-[15px] w-[50px] h-[50px]"
-            />
+          <div className='cursor-pointer rounded-2xl size-[50px]'>
+            <Avatar />
           </div>
         </div>
       </div>

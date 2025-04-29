@@ -28,9 +28,7 @@ const Profile = () => {
 
   return (
     <div className="w-1/2 h-full">
-      {avatarUploadMode && (
-        <UploadAvatarModal setAvatar={setAvatarImage} onSubmit={onAvatarUpload} />
-      )}
+      {avatarUploadMode && <UploadAvatarModal setAvatarUploadMode={setAvatarUploadMode} />}
       <div className="flex flex-col h-full gap-[50px]">
         <div className="relative w-full h-full">
           {/* Banner */}
