@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useUserAvatarUpload } from '@/hooks/use-users';
 
 const Avatar = dynamic(() => import('react-avatar-edit'), { ssr: false });
 
 interface UploadAvatarModalType {
-  setAvatar: (arg: string | null) => void;
-  onSubmit: () => void;
+  setAvatarUploadMode: (arg: boolean) => void;
 }
 
-function UploadAvatarModal({ setAvatar, onSubmit }: UploadAvatarModalType) {
-  const [preview, setPreview] = React.useState<string | null>(null);
+function UploadAvatarModal({ setAvatarUploadMode }: UploadAvatarModalType) {
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const uploadAvatar = useUserAvatarUpload(avatar!);
+
+  async function onSubmit() {
+    setAvatarUploadMode(false);
+    await uploadAvatar();
+  }
 
   function onClose() {
-    setPreview(null);
+    setAvatar(null);
   }
-  function onCrop(pv: string) {
-    setPreview(pv);
+  function onCrop(preview: any) {
+    setAvatar(preview);
   }
 
   return (
@@ -42,8 +48,6 @@ function UploadAvatarModal({ setAvatar, onSubmit }: UploadAvatarModalType) {
           }}
         />
         
-        {preview && <img src={preview} alt="Preview" className="w-[200px]" />}
-
         <div className="flex w-full gap-5">
           <button onClick={onClose} className="flex-1 flex justify-center items-center rounded-[10px] p-3 bg-[#1877f2] text-white cursor-pointer">
             Close

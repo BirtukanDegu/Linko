@@ -1,9 +1,11 @@
+import { useAppDispatch, useAppSelector } from './redux-hooks';
 import React from "react"
 import { doc, DocumentData, getDoc } from "firebase/firestore"
 import { updateProfile } from "firebase/auth";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
-import { auth, db, storage } from "@/app/firebase";
-import { UserDataType } from "@/types";
+import { setAuthUser } from '../redux/authUser/slice';
+import { auth, db, storage } from '@/app/firebase';
+import { UserDataType } from '@/types';
 
 export const useUserData = (id: string | undefined) => {
   const [userData, setUserData] = React.useState<DocumentData | UserDataType>();
@@ -23,6 +25,8 @@ export const useUserData = (id: string | undefined) => {
 }
 
 export const useUserAvatarUpload = (avatar: string) => {
+  const currentUser = useAppSelector(state => state.authUser)
+  const dispatch = useAppDispatch()
 
   async function uploadAvatar() {
     if (auth.currentUser) {
@@ -31,10 +35,11 @@ export const useUserAvatarUpload = (avatar: string) => {
         await uploadString(fileRef, avatar, 'data_url')
       }
       const photoURL = await getDownloadURL(fileRef)
-      updateProfile(auth.currentUser, {
+      await updateProfile(auth.currentUser, {
         photoURL: photoURL as string
-      }
-      )
+      })
+      dispatch(setAuthUser({ ...currentUser, avatar: photoURL }))
+
     }
   }
   return uploadAvatar
@@ -43,22 +48,24 @@ export const useUserAvatarUpload = (avatar: string) => {
 
 export function useGetUserAvatar(id: string | undefined) {
   const [avatar, setAvatar] = React.useState('')
+  const currentUser = useAppSelector(state => state.authUser)
+  const dispatch = useAppDispatch()
 
   async function getAvatar() {
     if (id) {
       const fileRef = ref(storage, 'userAvatars/' + id + '.png');
-      await getDownloadURL(fileRef).then((url) => {
+      await getDownloadURL(fileRef).then(async (url) => {
+        dispatch(setAuthUser({ ...currentUser, avatar: url }))
         setAvatar(url);
       })
     }
   }
-
-  console.log('avatar', avatar)
-  console.log('id', id)
   React.useEffect(() => {
-    if (id) {
-      getAvatar()
-    }
+    (async () => {
+      if (id) {
+        await getAvatar()
+      }
+    })()
   }, [id])
 
   return { avatar, getAvatar }
